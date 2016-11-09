@@ -8,7 +8,7 @@ import math
 from datetime import datetime
 import time
 import Image
-from tensorflow.python import control_flow_ops
+from tensorflow.python.ops import control_flow_ops
 from math import ceil
 from tensorflow.python.ops import gen_nn_ops
 import skimage
@@ -490,11 +490,11 @@ def eval_batches(data, sess, eval_prediction=None):
     return predictions
 
 def test():
-  checkpoint_dir = "/tmp4/first350/TensorFlow/Logs"
+  checkpoint_dir = "/home/zshen5/Log/TF"
   # testing should set BATCH_SIZE = 1
   batch_size = 1
 
-  image_filenames, label_filenames = get_filename_list("/tmp3/first350/SegNet-Tutorial/CamVid/test.txt")
+  image_filenames, label_filenames = get_filename_list("/home/zshen5/GitHub/SegNet-Tutorial/CamVid/test.txt")
 
   test_data_node = tf.placeholder(
         tf.float32,
@@ -517,7 +517,7 @@ def test():
 
   with tf.Session() as sess:
     # Load checkpoint
-    saver.restore(sess, "/tmp4/first350/TensorFlow/Logs/model.ckpt-" )
+    saver.restore(sess, "/home/zshen5/Log/TF/model.ckpt-" )
     images, labels = get_all_test_data(image_filenames, label_filenames)
     threads = tf.train.start_queue_runners(sess=sess)
     hist = np.zeros((NUM_CLASSES, NUM_CLASSES))
@@ -539,14 +539,14 @@ def test():
 
 
 if __name__ == "__main__":
-  test()
-  exit()
+#    test()
+#    exit()
   max_steps = 20000
   batch_size = BATCH_SIZE
-  train_dir = "/tmp4/first350/TensorFlow/Logs"
-  image_filenames, label_filenames = get_filename_list("/tmp3/first350/SegNet-Tutorial/CamVid/train.txt")
-  val_image_filenames, val_label_filenames = get_filename_list("/tmp3/first350/SegNet-Tutorial/CamVid/val.txt")
-  with tf.device('/gpu:3'):
+  train_dir = "/home/zshen5/Log/TF"
+  image_filenames, label_filenames = get_filename_list("/home/zshen5/GitHub/SegNet-Tutorial/CamVid/train.txt")
+  val_image_filenames, val_label_filenames = get_filename_list("/home/zshen5/GitHub/SegNet-Tutorial/CamVid/val.txt")
+  with tf.device('/gpu:0'):
       with tf.Graph().as_default():
 
         train_data_node = tf.placeholder(
@@ -643,17 +643,17 @@ if __name__ == "__main__":
               print("val loss: ", total_val_loss / TEST_ITER)
               acc_total = np.diag(hist).sum() / hist.sum()
               iu = np.diag(hist) / (hist.sum(1) + hist.sum(0) - np.diag(hist))
-              test_summary_str = sess.run(average_summary, feed_dict={average_pl: total_val_loss / TEST_ITER})
-              acc_summary_str = sess.run(acc_summary, feed_dict={acc_pl: acc_total})
-              iu_summary_str = sess.run(iu_summary, feed_dict={iu_pl: np.nanmean(iu)})
+#              test_summary_str = sess.run(average_summary, feed_dict={average_pl: total_val_loss / TEST_ITER})
+#         acc_summary_str = sess.run(acc_summary, feed_dict={acc_pl: acc_total})
+#              iu_summary_str = sess.run(iu_summary, feed_dict={iu_pl: np.nanmean(iu)})
               print_hist_summery(hist)
               # per_class_acc(eval_batches(val_images_batch, sess, eval_prediction=_val_pred), val_labels_batch)
 
               summary_str = sess.run(summary_op, feed_dict=feed_dict)
               summary_writer.add_summary(summary_str, step)
-              summary_writer.add_summary(test_summary_str, step)
-              summary_writer.add_summary(acc_summary_str, step)
-              summary_writer.add_summary(iu_summary_str, step)
+#            summary_writer.add_summary(test_summary_str, step)
+#              summary_writer.add_summary(acc_summary_str, step)
+#              summary_writer.add_summary(iu_summary_str, step)
             # Save the model checkpoint periodically.
             if step % 1000 == 0 or (step + 1) == max_steps:
               checkpoint_path = os.path.join(train_dir, 'model.ckpt')
