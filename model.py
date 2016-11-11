@@ -490,11 +490,11 @@ def eval_batches(data, sess, eval_prediction=None):
     return predictions
 
 def test():
-  checkpoint_dir = "/home/zshen5/Log/TF"
+  checkpoint_dir = "/home/zack/Log/TF"
   # testing should set BATCH_SIZE = 1
   batch_size = 1
 
-  image_filenames, label_filenames = get_filename_list("/home/zshen5/GitHub/SegNet-Tutorial/CamVid/test.txt")
+  image_filenames, label_filenames = get_filename_list("/home/zack/GitHub/SegNet-Tutorial/CamVid/test.txt")
 
   test_data_node = tf.placeholder(
         tf.float32,
@@ -517,7 +517,7 @@ def test():
 
   with tf.Session() as sess:
     # Load checkpoint
-    saver.restore(sess, "/home/zshen5/Log/TF/model.ckpt-" )
+    saver.restore(sess, "/home/zack/Log/TF/model.ckpt-" )
     images, labels = get_all_test_data(image_filenames, label_filenames)
     threads = tf.train.start_queue_runners(sess=sess)
     hist = np.zeros((NUM_CLASSES, NUM_CLASSES))
@@ -543,10 +543,10 @@ if __name__ == "__main__":
 #    exit()
   max_steps = 20000
   batch_size = BATCH_SIZE
-  train_dir = "/home/zshen5/Log/TF"
-  image_filenames, label_filenames = get_filename_list("/home/zshen5/GitHub/SegNet-Tutorial/CamVid/train.txt")
-  val_image_filenames, val_label_filenames = get_filename_list("/home/zshen5/GitHub/SegNet-Tutorial/CamVid/val.txt")
-  with tf.device('/gpu:0'):
+  train_dir = "/home/zack/Log/TF"
+  image_filenames, label_filenames = get_filename_list("/home/zack/GitHub/SegNet-Tutorial/CamVid/train.txt")
+  val_image_filenames, val_label_filenames = get_filename_list("/home/zack/GitHub/SegNet-Tutorial/CamVid/val.txt")
+  with tf.device('/gpu:1'):
       with tf.Graph().as_default():
 
         train_data_node = tf.placeholder(
